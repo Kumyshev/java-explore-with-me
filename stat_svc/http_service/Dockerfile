@@ -1,3 +1,3 @@
-FROM amazoncorretto:11-alpine-jdk
-COPY target/*.jar stat_svc.jar
-ENTRYPOINT ["java","-jar","/stat_svc.jar"]
+FROM openjdk:17-jdk-alpine
+COPY target/http_service-1.0-SNAPSHOT.jar http_service-1.0.jar
+ENTRYPOINT ["java","-jar","/http_service-1.0.jar"]

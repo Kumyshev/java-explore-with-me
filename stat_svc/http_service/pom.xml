@@ -13,7 +13,7 @@
     <artifactId>http_service</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <dependencies> 
+    <dependencies>
         <dependency> 
             <groupId>org.springframework.boot</groupId> 
             <artifactId>spring-boot-starter-data-jpa</artifactId> 
@@ -47,6 +47,8 @@
             <artifactId>dto</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        
+
     </dependencies> 
   
     <build> 
