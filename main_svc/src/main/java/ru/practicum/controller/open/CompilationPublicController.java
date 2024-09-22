@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import ru.practicum.dto.CompilationDto;
+import ru.practicum.impl.ICompilationService;
 
 import java.util.List;
 
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class CompilationPublicController {
 
+    private final ICompilationService compilationService;
+
     @GetMapping
     public List<CompilationDto> findCompilations(
             @RequestParam(name = "pinned") Boolean pinned,
             @RequestParam(name = "from") Integer from,
             @RequestParam(name = "size") Integer size) {
-        return null;
+        return compilationService.findCompilations(pinned, from, size);
     }
 
     @GetMapping("/{compId}")

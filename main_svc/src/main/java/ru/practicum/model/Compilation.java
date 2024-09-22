@@ -25,10 +25,7 @@ public class Compilation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     @ManyToMany
-    @JoinTable(
-        name = "events_compilations", 
-        joinColumns = @JoinColumn(name = "compilation_id"), 
-        inverseJoinColumns = @JoinColumn(name = "event_id"))
+    @JoinTable(name = "events_compilations", joinColumns = @JoinColumn(name = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "event_id"))
     List<Event> events = new ArrayList<>();
     Boolean pinned;
     String title;
