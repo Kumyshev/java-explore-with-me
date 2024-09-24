@@ -12,6 +12,7 @@ import ru.practicum.dto.EventShortDto;
 import ru.practicum.dto.NewEventDto;
 import ru.practicum.dto.ParticipationRequestDto;
 import ru.practicum.dto.UpdateEventUserRequest;
+import ru.practicum.impl.IEventService;
 
 import java.util.List;
 
@@ -27,26 +28,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class EventPrivateController {
 
+    private final IEventService eventService;
+
     @GetMapping
     public List<EventShortDto> findEvents(
             @PathVariable Long userId,
-            @RequestParam(name = "from") Integer from,
-            @RequestParam(name = "size") Integer size) {
-        return null;
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return eventService.findEvents(userId, from, size);
     }
 
     @PostMapping
     public EventFullDto saveEvent(
             @PathVariable Long userId,
             @Valid @RequestBody NewEventDto newEventDto) {
-        return null;
+        return eventService.saveEvent(userId, newEventDto);
     }
 
     @GetMapping("/{eventId}")
     public EventFullDto findEvent(
             @PathVariable Long userId,
             @PathVariable Long eventId) {
-        return null;
+        return eventService.findEvent(userId, eventId);
     }
 
     @PatchMapping("/{eventId}")
@@ -54,7 +57,7 @@ public class EventPrivateController {
             @PathVariable Long userId,
             @PathVariable Long eventId,
             @Valid @RequestBody UpdateEventUserRequest updateEventUserRequest) {
-        return null;
+        return eventService.updateEvent(userId, eventId, updateEventUserRequest);
     }
 
     @GetMapping("/{eventId}/requests")

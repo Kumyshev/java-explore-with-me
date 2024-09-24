@@ -7,9 +7,9 @@ import ru.practicum.dto.UserDto;
 
 public interface IUserService {
 
-    public List<UserDto> findUsers(List<Long> ids, Integer from, Integer size);
+    List<UserDto> findUsers(List<Long> ids, Integer from, Integer size);
 
-    public UserDto saveUser(NewUserRequest newUserRequest);
+    UserDto saveUser(NewUserRequest newUserRequest);
 
-    public void deleteUser(Long userId);
+    void deleteUser(Long userId);
 }

@@ -7,13 +7,13 @@ import ru.practicum.dto.NewCategoryDto;
 
 public interface ICategoryService {
 
-    public CategoryDto saveCategory(NewCategoryDto newCategoryDto);
+    CategoryDto saveCategory(NewCategoryDto newCategoryDto);
 
-    public void deleteCategory(Long catId);
+    void deleteCategory(Long catId);
 
-    public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto);
+    CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto);
 
-    public List<CategoryDto> findCategories(Integer from, Integer size);
+    List<CategoryDto> findCategories(Integer from, Integer size);
 
-    public CategoryDto findCategory(Long catId);
+    CategoryDto findCategory(Long catId);
 }

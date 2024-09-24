@@ -16,7 +16,7 @@ import ru.practicum.model.Category;
     unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CategoryMapper {
 
-    Category toCategory(NewCategoryDto newCategoryDto);
+    Category toCategory(NewCategoryDto newCategoryDto); 
 
     CategoryDto toCategoryDto(Category category);
 
