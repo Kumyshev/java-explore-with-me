@@ -13,6 +13,7 @@ import ru.practicum.dto.NewEventDto;
 import ru.practicum.dto.ParticipationRequestDto;
 import ru.practicum.dto.UpdateEventUserRequest;
 import ru.practicum.impl.IEventService;
+import ru.practicum.impl.IRequestService;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class EventPrivateController {
 
     private final IEventService eventService;
+    private final IRequestService requestService;
 
     @GetMapping
     public List<EventShortDto> findEvents(
@@ -64,15 +66,15 @@ public class EventPrivateController {
     public List<ParticipationRequestDto> findEventRequests(
             @PathVariable Long userId,
             @PathVariable Long eventId) {
-        return null;
+        return requestService.findEventRequests(userId, eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
-    public EventRequestStatusUpdateResult findEventRequestStatusUpdate(
+    public EventRequestStatusUpdateResult updateEventRequestStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,
             @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
-        return null;
+        return requestService.updateEventRequestStatus(userId, eventId, eventRequestStatusUpdateRequest);
     }
 
 }

@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.dto.CompilationDto;
 import ru.practicum.dto.NewCompilationDto;
+import ru.practicum.impl.ICompilationService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,21 +20,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class CompilationAdminController {
 
+    private final ICompilationService compilationService;
+
     @PostMapping
     public CompilationDto saveCompilation(
             @Valid @RequestBody NewCompilationDto newCompilationDto) {
-        return null;
+        return compilationService.saveCompilation(newCompilationDto);
     }
 
     @DeleteMapping("/{compId}")
     public void deleteCompilation(@PathVariable Long compId) {
-
+        compilationService.deleteCompilation(compId);
     }
 
     @PatchMapping("/{compId}")
     public CompilationDto updateCompilation(
             @PathVariable Long compId,
             @Valid @RequestBody NewCompilationDto newCompilationDto) {
-        return null;
+        return compilationService.updateCompilation(compId, newCompilationDto);
     }
 }

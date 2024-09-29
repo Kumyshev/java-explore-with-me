@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.dto.NewUserRequest;
 import ru.practicum.dto.UserDto;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.impl.IUserService;
 import ru.practicum.mapper.UserMapper;
 import ru.practicum.model.User;
@@ -44,7 +45,7 @@ public class UserService implements IUserService {
     @Override
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
         userRepository.delete(user);
     }
 

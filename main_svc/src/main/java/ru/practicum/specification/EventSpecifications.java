@@ -3,6 +3,7 @@ package ru.practicum.specification;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
+
 import ru.practicum.model.Event;
 
 public class EventSpecifications {
@@ -30,5 +31,24 @@ public class EventSpecifications {
     public static Specification<Event> lessThan(String rangeEnd) {
         return (root, query, criteriaBuilder) -> rangeEnd == null ? criteriaBuilder.conjunction()
                 : criteriaBuilder.lessThan(root.get("eventDate"), rangeEnd);
+    }
+
+    public static Specification<Event> hasText(String text) {
+        return (root, query, criteriaBuilder) -> text == null ? criteriaBuilder.conjunction()
+                : criteriaBuilder.or(
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("annotation")), text),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), text));
+    }
+
+    public static Specification<Event> hasOnlyAvailable(Boolean onlyAvailable) {
+        return (root, query, criteriaBuilder) -> (onlyAvailable == null || onlyAvailable == false)
+                ? criteriaBuilder.conjunction()
+                : criteriaBuilder.lessThan(root.get("confirmedRequests"),
+                        root.get("participantLimit"));
+    }
+
+    public static Specification<Event> hasPaid(Boolean paid) {
+        return (root, query, criteriaBuilder) -> paid == null ? criteriaBuilder.conjunction()
+                : criteriaBuilder.equal(root.get("paid"), paid);
     }
 }

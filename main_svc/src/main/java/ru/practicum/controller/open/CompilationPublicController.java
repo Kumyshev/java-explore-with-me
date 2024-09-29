@@ -29,9 +29,8 @@ public class CompilationPublicController {
     }
 
     @GetMapping("/{compId}")
-    public List<CompilationDto> findCompilations(
-            @PathVariable Long compId) {
-        return null;
+    public CompilationDto findCompilation(@PathVariable Long compId) {
+        return compilationService.findCompilation(compId);
     }
 
 }

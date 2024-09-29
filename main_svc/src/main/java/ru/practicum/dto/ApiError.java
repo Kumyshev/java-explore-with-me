@@ -1,5 +1,16 @@
 package ru.practicum.dto;
 
+import java.util.List;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class ApiError {
-    
+    List<String> errors;
+    String message;
+    String reason;
+    String status;
+    String timestamp;
 }

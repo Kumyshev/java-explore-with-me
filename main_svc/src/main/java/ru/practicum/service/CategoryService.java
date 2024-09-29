@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.dto.CategoryDto;
 import ru.practicum.dto.NewCategoryDto;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.impl.ICategoryService;
 import ru.practicum.mapper.CategoryMapper;
 import ru.practicum.model.Category;
@@ -30,14 +31,14 @@ public class CategoryService implements ICategoryService {
     @Override
     public void deleteCategory(Long catId) {
         Category category = categoryRepository.findById(catId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
         categoryRepository.delete(category);
     }
 
     @Override
     public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto) {
         Category category = categoryRepository.findById(catId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
         categoryMapper.toUpdate(newCategoryDto, category);
         categoryRepository.save(category);
         return categoryMapper.toCategoryDto(category);
@@ -52,7 +53,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public CategoryDto findCategory(Long catId) {
         Category category = categoryRepository.findById(catId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
         return categoryMapper.toCategoryDto(category);
     }
 

@@ -1,22 +1,29 @@
 package ru.practicum.service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.dto.EventFullDto;
 import ru.practicum.dto.EventShortDto;
 import ru.practicum.dto.NewEventDto;
 import ru.practicum.dto.UpdateEventAdminRequest;
 import ru.practicum.dto.UpdateEventUserRequest;
+import ru.practicum.enums.AvailableValues;
 import ru.practicum.enums.State;
 import ru.practicum.enums.StateAction;
 import ru.practicum.etc.TemplateSettings;
+import ru.practicum.exception.ForbiddenException;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.impl.IEventService;
+import ru.practicum.impl.IStatService;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
@@ -36,6 +43,8 @@ public class EventService implements IEventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
+    private final IStatService statService;
+
     @Override
     public List<EventShortDto> findEvents(Long userId, Integer from, Integer size) {
         List<Event> events = eventRepository.findByInitiator_Id(userId, PageRequest.of(from, size));
@@ -45,16 +54,17 @@ public class EventService implements IEventService {
     @Override
     public EventFullDto saveEvent(Long userId, NewEventDto newEventDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
         Long catId = newEventDto.getCategory();
         Category category = categoryRepository.findById(catId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime eventDate = LocalDateTime.parse(newEventDto.getEventDate(), TemplateSettings.DATE_FORMATTER);
 
-        if (!eventDate.isBefore(now.plusHours(2))) {
-            return null;
+        if (!eventDate.isAfter(now.plusHours(2))) {
+            throw new ForbiddenException(
+                    "Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + eventDate);
         }
 
         Event event = eventMapper.toEvent(newEventDto);
@@ -71,7 +81,8 @@ public class EventService implements IEventService {
     @Override
     public EventFullDto findEvent(Long userId, Long eventId) {
         Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(
+                        "Event with id=" + eventId + " or userId=" + userId + " was not found"));
 
         return eventMapper.toEventFullDto(event);
     }
@@ -79,18 +90,20 @@ public class EventService implements IEventService {
     @Override
     public EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
         Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(
+                        "Event with id=" + eventId + " or userId=" + userId + " was not found"));
 
         Long catId = updateEventUserRequest.getCategory();
         Category category = categoryRepository.findById(catId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime eventDate = LocalDateTime.parse(updateEventUserRequest.getEventDate(),
                 TemplateSettings.DATE_FORMATTER);
 
-        if (!eventDate.isBefore(now.plusHours(2))) {
-            return null;
+        if (!eventDate.isAfter(now.plusHours(2))) {
+            throw new ForbiddenException(
+                    "Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + eventDate);
         }
 
         if (event.getState() == State.CANCELED || event.getState() == State.PENDING) {
@@ -124,14 +137,16 @@ public class EventService implements IEventService {
     @Override
     public EventFullDto updateEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(
+                        "Event with id=" + eventId + " was not found"));
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime newEventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(),
                 TemplateSettings.DATE_FORMATTER);
 
         if (newEventDate != null && newEventDate.isAfter(now.plusHours(1))) {
-            return null;
+            throw new ForbiddenException(
+                    "Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + newEventDate);
         }
 
         if (updateEventAdminRequest.getLocation() == null) {
@@ -154,6 +169,50 @@ public class EventService implements IEventService {
             eventFullDto.setLocation(updateEventAdminRequest.getLocation());
         }
         return eventFullDto;
+    }
+
+    @Override
+    public List<EventShortDto> findEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
+            String rangeEnd, Boolean onlyAvailable, AvailableValues sort, Integer from, Integer size,
+            HttpServletRequest httpServletRequest) {
+
+        Specification<Event> specification = EventSpecifications.hasText(text)
+                .or(EventSpecifications.hasCategories(categories))
+                .or(EventSpecifications.hasPaid(paid))
+                .or(EventSpecifications.greaterThan(rangeStart))
+                .or(EventSpecifications.lessThan(rangeEnd))
+                .or(EventSpecifications.hasOnlyAvailable(onlyAvailable));
+
+        Page<Event> events = eventRepository.findAll(specification, PageRequest.of(from, size));
+
+        if (sort != null) {
+            if (sort == AvailableValues.EVENT_DATE) {
+                return events.stream()
+                        .sorted(Comparator.comparing(Event::getEventDate))
+                        .map(eventMapper::toEventShortDto).toList();
+            } else {
+                return events.stream()
+                        .sorted(Comparator.comparing(Event::getViews))
+                        .map(eventMapper::toEventShortDto).toList();
+            }
+        }
+
+        statService.postHit(httpServletRequest);
+
+        return events.stream().map(eventMapper::toEventShortDto).toList();
+    }
+
+    @Override
+    public EventFullDto findEvent(Long id, HttpServletRequest httpServletRequest) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        LocalDateTime start = LocalDateTime.now().plusSeconds(10);
+        LocalDateTime end = LocalDateTime.now();
+        List<String> uris = List.of(httpServletRequest.getRequestURI());
+        Integer views = (Integer) statService.getStats(start, end, uris, true).getBody();
+        event.setViews(views);
+        statService.postHit(httpServletRequest);
+
+        return eventMapper.toEventFullDto(event);
     }
 
 }
