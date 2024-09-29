@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import ru.practicum.ViewStatsDto;
 import ru.practicum.dto.EventFullDto;
 import ru.practicum.dto.EventShortDto;
 import ru.practicum.dto.NewEventDto;
@@ -205,11 +206,11 @@ public class EventService implements IEventService {
     @Override
     public EventFullDto findEvent(Long id, HttpServletRequest httpServletRequest) {
         Event event = eventRepository.findById(id).orElseThrow();
-        LocalDateTime start = LocalDateTime.now().plusSeconds(10);
+        LocalDateTime start = LocalDateTime.now().minusYears(10);
         LocalDateTime end = LocalDateTime.now();
         List<String> uris = List.of(httpServletRequest.getRequestURI());
-        Integer views = (Integer) statService.getStats(start, end, uris, true).getBody();
-        event.setViews(views);
+        List<Object> views =(List<Object>) statService.getStats(start, end, uris, true).getBody();
+        event.setViews(views.size());
         statService.postHit(httpServletRequest);
 
         return eventMapper.toEventFullDto(event);

@@ -16,7 +16,6 @@ import ru.practicum.enums.Status;
 import ru.practicum.etc.TemplateSettings;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.impl.IRequestService;
-import ru.practicum.impl.IStatService;
 import ru.practicum.mapper.RequestMapper;
 import ru.practicum.model.Event;
 import ru.practicum.model.Request;
@@ -34,8 +33,6 @@ public class RequestService implements IRequestService {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
-
-    private final IStatService statService;
 
     @Override
     public List<ParticipationRequestDto> findRequests(Long userId) {
@@ -71,8 +68,6 @@ public class RequestService implements IRequestService {
         }
 
         request.setStatus(State.PENDING.name());
-
-        statService.postHit(httpServletRequest);
 
         return requestMapper.toParticipationRequestDto(requestRepository.save(request));
     }
