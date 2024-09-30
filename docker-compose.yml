@@ -20,7 +20,7 @@ services:
       - POSTGRES_PASSWORD=akhmed
       - POSTGRES_USER=postgres
       - POSTGRES_DB=stats
-  main-service:
+  ewm-service:
     build: ./main_svc
     image: main_svc
     container_name: main_svc
