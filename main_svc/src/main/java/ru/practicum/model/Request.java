@@ -21,11 +21,11 @@ import lombok.NoArgsConstructor;
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String created;
+    private Long id;
+    private String created;
     @OneToOne
-    Event event;
+    private Event event;
     @OneToOne
-    User requester;
-    String status;
+    private User requester;
+    private String status;
 }

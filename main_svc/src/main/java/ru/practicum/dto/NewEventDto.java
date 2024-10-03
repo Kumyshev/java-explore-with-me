@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NewEventDto {
     @Size(min = 20, max = 2000)
-    String annotation;
-    Long category;
+    private String annotation;
+    private Long category;
     @Size(min = 20, max = 7000)
-    String description;
-    String eventDate;
-    Location location;
-    Boolean paid = false;
-    Integer participantLimit = 0;
-    Boolean requestModeration = true;
+    private String description;
+    private String eventDate;
+    private Location location;
+    private Boolean paid = false;
+    private Integer participantLimit = 0;
+    private Boolean requestModeration = true;
     @Size(min = 3, max = 120)
-    String title;
+    private String title;
 }

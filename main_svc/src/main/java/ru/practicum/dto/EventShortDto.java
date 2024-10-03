@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventShortDto {
-    String annotation;
-    CategoryDto category;
-    Integer confirmedRequests;
-    String eventDate;
-    Long id;
-    UserShortDto initiator;
-    Boolean paid;
-    String title;
-    Integer views;
+    private String annotation;
+    private CategoryDto category;
+    private Integer confirmedRequests;
+    private String eventDate;
+    private Long id;
+    private UserShortDto initiator;
+    private Boolean paid;
+    private String title;
+    private Integer views;
 }

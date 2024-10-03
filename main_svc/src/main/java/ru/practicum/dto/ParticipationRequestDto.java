@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ParticipationRequestDto {
-    String created;
-    Long event;
-    Long id;
-    Long requester;
-    String status;
+    private String created;
+    private Long event;
+    private Long id;
+    private Long requester;
+    private String status;
 }

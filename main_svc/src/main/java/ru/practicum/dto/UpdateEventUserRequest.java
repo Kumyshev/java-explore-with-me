@@ -11,16 +11,16 @@ import ru.practicum.enums.StateAction;
 @AllArgsConstructor
 public class UpdateEventUserRequest {
     @Size(min = 20, max = 2000)
-    String annotation;
-    Long category;
+    private String annotation;
+    private Long category;
     @Size(min = 20, max = 7000)
-    String description;
-    String eventDate;
-    Location location;
-    Boolean paid;
-    Integer participantLimit;
-    Boolean requestModeration;
-    StateAction stateAction;
+    private String description;
+    private String eventDate;
+    private Location location;
+    private Boolean paid;
+    private Integer participantLimit;
+    private Boolean requestModeration;
+    private StateAction stateAction;
     @Size(min = 3, max = 120)
-    String title;
+    private String title;
 }

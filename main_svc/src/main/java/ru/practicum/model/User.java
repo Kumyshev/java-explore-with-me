@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
     @Column(unique = true)
-    String email;
-    String name;
+    private String email;
+    private String name;
 }

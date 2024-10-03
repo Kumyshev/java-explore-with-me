@@ -9,20 +9,20 @@ import ru.practicum.enums.State;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventFullDto {
-    String annotation;
-    CategoryDto category;
-    Integer confirmedRequests;
-    String createdOn;
-    String description;
-    String eventDate;
-    Long id;
-    UserShortDto initiator;
-    Location location;
-    Boolean paid;
-    Integer participantLimit;
-    String publishedOn;
-    Boolean requestModeration;
-    State state;
-    String title;
-    Integer views;
+    private String annotation;
+    private CategoryDto category;
+    private Integer confirmedRequests;
+    private String createdOn;
+    private String description;
+    private String eventDate;
+    private Long id;
+    private UserShortDto initiator;
+    private Location location;
+    private Boolean paid;
+    private Integer participantLimit;
+    private String publishedOn;
+    private Boolean requestModeration;
+    private State state;
+    private String title;
+    private Integer views;
 }

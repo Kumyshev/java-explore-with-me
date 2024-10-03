@@ -20,29 +20,29 @@ import ru.practicum.enums.State;
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    String annotation;
+    private Long id;
+    private String annotation;
     @ManyToOne
-    Category category;
+    private Category category;
     @Column(name = "confirmed_requests")
-    Integer confirmedRequests;
+    private Integer confirmedRequests;
     @Column(name = "created_on")
-    String createdOn;
-    String description;
+    private String createdOn;
+    private String description;
     @Column(name = "event_date")
-    String eventDate;
+    private String eventDate;
     @ManyToOne
-    User initiator;
-    Float lat;
-    Float lon;
-    Boolean paid;
+    private User initiator;
+    private Float lat;
+    private Float lon;
+    private Boolean paid;
     @Column(name = "participant_limit")
-    Integer participantLimit;
+    private Integer participantLimit;
     @Column(name = "published_on")
-    String publishedOn;
+    private String publishedOn;
     @Column(name = "request_moderation")
-    Boolean requestModeration;
-    State state;
-    String title;
-    Integer views;
+    private Boolean requestModeration;
+    private State state;
+    private String title;
+    private Integer views;
 }

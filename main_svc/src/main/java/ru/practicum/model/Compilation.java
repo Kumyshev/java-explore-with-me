@@ -23,10 +23,10 @@ import lombok.NoArgsConstructor;
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
     @ManyToMany
     @JoinTable(name = "events_compilations", joinColumns = @JoinColumn(name = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "event_id"))
-    List<Event> events = new ArrayList<>();
-    Boolean pinned;
-    String title;
+    private List<Event> events = new ArrayList<>();
+    private Boolean pinned;
+    private String title;
 }
